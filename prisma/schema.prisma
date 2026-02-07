@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DealStage {
+  LEAD
+  QUALIFIED
+  PROPOSAL
+  WON
+  LOST
+}
+
+model Deal {
+  id        String    @id @default(uuid())
+  name      String
+  value     Int
+  stage     DealStage @default(LEAD)
+  owner     String
+
+  accountId String?
+  account   Account? @relation(fields: [accountId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
+
+model Account {
+  id        String   @id @default(uuid())
+  name      String
+  industry  String?
+  website   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deals     Deal[]
+}
