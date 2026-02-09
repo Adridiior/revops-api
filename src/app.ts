@@ -15,9 +15,14 @@ app.use(cors());
 app.use(express.json());
 
 // health check
-app.get("/health", (_req, res) => {
-  res.json({ ok: true });
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    message: "RevOps API is running",
+    endpoints: ["/health", "/accounts", "/deals", "/reps"],
+  });
 });
+
 
 // routes
 app.use("/deals", dealsRouter);
