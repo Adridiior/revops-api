@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import accountsRouter from "./routes/accounts.routes";
+import repsRouter from "./routes/reps.routes";
 
 
 import dealsRouter from "./routes/deals.routes";
@@ -22,8 +23,11 @@ app.get("/health", (_req, res) => {
 app.use("/deals", dealsRouter);
 app.use("/accounts", accountsRouter);
 
+app.use("/reps", repsRouter);
 
 // error middleware (SEMPRE per ultimo)
 app.use(errorMiddleware);
+
+
 
 export default app;
