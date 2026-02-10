@@ -1,27 +1,31 @@
 # RevOps API (Deals & Accounts)
 
+**Live API:** https://revops-api-production.up.railway.app
+
 Backend REST API built with Node.js, TypeScript and Express, using PostgreSQL (Railway) and Prisma ORM.
 
 This project simulates a real-world Revenue Operations / CRM backend, designed to manage business deals linked to customer accounts and to be consumed by a frontend dashboard.
 
+---
 
-FEATURES
+## Features
 
 - Full CRUD for Deals
 - Full CRUD for Accounts
-- Relational model:
+- Relational data model
   - One Account → many Deals
-- Advanced query filters:
-  - GET /deals?stage=LEAD
-  - GET /deals?owner=Adriano
-  - GET /deals?stage=LEAD&owner=Adriano
+- Advanced query filters
+  - `GET /deals?stage=LEAD`
+  - `GET /deals?owner=Adriano`
+  - `GET /deals?stage=LEAD&owner=Adriano`
 - Input validation with Zod
 - Centralized error handling
-- Prisma migrations & seed data
-- Clean REST architecture, ready for frontend integration
+- Production-safe database bootstrap and controlled seeding
+- Clean REST architecture, designed for frontend consumption
 
+---
 
-TECH STACK
+## Tech Stack
 
 - Node.js
 - TypeScript
@@ -32,118 +36,100 @@ TECH STACK
 - dotenv
 - CORS
 
+---
 
-GETTING STARTED
+## Getting Started (Local Development)
 
-1) Install dependencies
+### 1. Install dependencies
 
+```bash
 npm install
+```
 
+### 2. Environment variables
 
-2) Environment variables
+Create a `.env` file in the project root:
 
-Create a .env file in the project root:
-
+```env
 PORT=3001
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/railway"
+PRISMA_DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/railway
+```
 
-(see .env.example)
+(see `.env.example`)
 
+### 3. Sync database schema
 
-3) Run database migrations
+```bash
+npx prisma db push
+```
 
-npm run migrate
+### 4. (Optional) Seed demo data
 
-
-4) (Optional) Seed demo data
-
+```bash
 npm run seed
+```
 
+### 5. Start development server
 
-5) Start development server
-
+```bash
 npm run dev
+```
 
-API will be available at:
+API available at:
+```
 http://localhost:3001
+```
 
+---
 
-API ENDPOINTS
+## Production Setup
 
-Health Check
+- Database is hosted on **Railway PostgreSQL** (internal service connection)
+- On startup, the API automatically synchronizes the database schema using:
+
+```bash
+prisma db push
+```
+
+- A controlled seed process is available for production via the `RUN_SEED` environment variable.
+  - When `RUN_SEED=true`, demo data is inserted once at startup
+  - The variable is removed immediately after seeding to avoid re-running it
+
+This ensures a safe, repeatable production bootstrap without manual database access.
+
+---
+
+## API Endpoints
+
+### Health Check
+
+```
 GET /health
+```
 
-curl http://localhost:3001/health
+### Accounts
 
+- `POST /accounts`
+- `GET /accounts`
 
-ACCOUNTS
+### Deals
 
-Create account
-POST /accounts
+- `POST /deals`
+- `GET /deals` (supports filters)
+- `GET /deals/:id`
+- `PUT /deals/:id`
+- `DELETE /deals/:id`
 
-curl -X POST http://localhost:3001/accounts \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Acme Inc","industry":"SaaS","website":"https://acme.com"}'
+---
 
+## Why This Project Matters
 
-Get all accounts
-GET /accounts
+This API demonstrates:
 
-curl http://localhost:3001/accounts
+- Real production deployment (Railway)
+- Relational data modeling with Prisma
+- Environment-safe database initialization
+- Controlled data seeding for demos
+- API design ready for real frontend consumption
 
-
-DEALS
-
-Create deal
-POST /deals
-
-curl -X POST http://localhost:3001/deals \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Deal Test","value":1200,"stage":"QUALIFIED","owner":"Adriano"}'
-
-
-Get deals (with filters)
-GET /deals
-
-curl "http://localhost:3001/deals?stage=LEAD"
-curl "http://localhost:3001/deals?owner=Adriano"
-curl "http://localhost:3001/deals?stage=LEAD&owner=Adriano"
-
-
-Get deal by ID
-GET /deals/:id
-
-curl http://localhost:3001/deals/DEAL_ID
-
-
-Update deal
-PUT /deals/:id
-
-curl -X PUT http://localhost:3001/deals/DEAL_ID \
-  -H "Content-Type: application/json" \
-  -d '{"value":2500,"stage":"PROPOSAL"}'
-
-
-Delete deal
-DELETE /deals/:id
-
-curl -X DELETE http://localhost:3001/deals/DEAL_ID
-
-
-NOTES
-
-- Database hosted on Railway (PostgreSQL)
-- Prisma migrations keep schema in sync
-- Seed script generates demo data for fast testing
-- Designed to be integrated with a React dashboard or any frontend client
-
-
-WHY THIS PROJECT MATTERS
-
-This project demonstrates:
-- real backend architecture (not a tutorial app)
-- relational data modeling
-- validation and error handling
-- API design ready for frontend consumption
-
-It is intentionally built as a standalone API, but also meant to be integrated into a full-stack application.
+It is built as a standalone service, but also designed to be part of a full-stack application.
