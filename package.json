@@ -2,9 +2,10 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "prisma generate && tsc",
-    "start": "npx prisma db push && node dist/src/index.js",
+    "start": "npx prisma db push && if [ \"$RUN_SEED\" = \"true\" ]; then npm run seed:prod; fi && node dist/src/index.js",
     "migrate": "prisma migrate dev",
     "seed": "ts-node prisma/seed.ts",
+    "seed:prod": "node dist/prisma/seed.js",
     "studio": "prisma studio"
   },
   "dependencies": {
