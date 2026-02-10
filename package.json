@@ -2,17 +2,18 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "prisma generate && tsc",
-    "start": "node dist/src/index.js",
+    "start": "npx prisma db push && node dist/src/index.js",
     "migrate": "prisma migrate dev",
     "seed": "ts-node prisma/seed.ts",
     "studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "6.19.2",
-    "prisma": "6.19.2",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
+    "pg": "^8.18.0",
+    "prisma": "6.19.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
